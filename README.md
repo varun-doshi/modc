@@ -1,10 +1,10 @@
-# ModC : Rust implementation of Finite Field Arithmetic
+# ModC : Rust Implementation of Finite Field Arithmetic
 
-### Warning: This is strcitly for learning purposes currently and should not be used in any production environment
+### Warning: This is strcitly for learning purposes and currently should not be used in any production environment
 
 ModC is an ongoing Finite Field Implementation in Rust. 
 
-Current Finite Field Operations
+### Current Finite Field Operations implemented:
 - Addition
 - Subtration
 - Multiplication
@@ -15,4 +15,4 @@ Current Finite Field Operations
 - Power
 
 
-Check the `tests` folder to understand how to usage
+Check the `tests` folder to understand how to use
