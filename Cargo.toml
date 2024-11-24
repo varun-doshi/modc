@@ -3,10 +3,10 @@ name = "modc"
 version = "0.1.0"
 edition = "2021"
 authors = ["Varun Doshi"]
-description = "Sample library in rust"
+description = "Finite Field Arithmetic library in rust"
 license = "MIT OR Apache-2.0"
-homepage = "https://github.com/karthikrathinavel/rustlibrary1"
-repository = "https://github.com/karthikrathinavel/rustlibrary1"
+homepage = "https://github.com/varun-doshi/modc.git"
+repository = "https://github.com/varun-doshi/modc.git"
 readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
