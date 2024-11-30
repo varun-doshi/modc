@@ -1,39 +1,55 @@
+use std::fmt::Debug;
+use std::ops::{Add, Div, Mul, Rem, Sub};
+
 use crate::utils::error::ModCError;
 use primitive_types::U256;
 
 #[derive(Debug, PartialEq)]
-pub struct Field {
+pub struct Field<T> {
     modulus: U256,
+    _marker: std::marker::PhantomData<T>,
 }
 
-impl Field {
-    pub fn new(modulus: u64) -> Result<Field, ModCError> {
-        if modulus == 0 {
+impl<T> Field<T>
+where
+    T: Copy
+        + Debug
+        + PartialEq
+        + Add<Output = T>
+        + Sub<Output = T>
+        + Mul<Output = T>
+        + Div<Output = T>
+        + Rem<Output = T>
+        + Into<U256>,
+{
+    pub fn new(modulus: U256) -> Result<Self, ModCError> {
+        if modulus == U256::zero() {
             return Err(ModCError::ModulusZero);
         }
         let formatted_modulus = U256::from(modulus);
         Ok(Field {
             modulus: formatted_modulus,
+            _marker: std::marker::PhantomData,
         })
     }
 
     ///(a+b)=(a+b)mod p
-    pub fn add(&self, a: u64, b: u64) -> Result<U256, ModCError> {
-        let formatted_a = U256::from(a);
-        let formatted_b = U256::from(b);
+    pub fn add(&self, a: T, b: T) -> Result<U256, ModCError> {
+        let formatted_a: U256 = a.into();
+        let formatted_b: U256 = b.into();
 
         let sum = formatted_a.checked_add(formatted_b);
         match sum {
-            Some(s) => return Ok(s % self.modulus),
-            None => return Err(ModCError::Overflow),
+            Some(s) => Ok(s % self.modulus),
+            None => Err(ModCError::Overflow),
         }
     }
 
     ///(a % m + m - b % m ) % m
-    pub fn sub(&self, a: u64, b: u64) -> Result<U256, ModCError> {
+    pub fn sub(&self, a: T, b: T) -> Result<U256, ModCError> {
         //(6-9)mod7=-3mod7
-        let formatted_a = self.self_mod(U256::from(a));
-        let formatted_b = self.self_mod(U256::from(b));
+        let formatted_a = self.self_mod(a);
+        let formatted_b = self.self_mod(b);
 
         if formatted_b > formatted_a {
             let diff = (formatted_a + self.modulus - formatted_b) % self.modulus;
@@ -44,14 +60,21 @@ impl Field {
         }
     }
 
-    pub fn add_inv(&self, a: U256) -> Result<U256, ModCError> {
-        Ok((self.modulus - a) % self.modulus)
+    pub fn add_inv(&self, a: T) -> Result<U256, ModCError> {
+        let formatted_a: U256 = a.into();
+        if formatted_a >= self.modulus.into() {
+            return Ok(((formatted_a - self.modulus) % self.modulus).into());
+        }
+        Ok(
+            ((Into::<U256>::into(self.modulus) - Into::<U256>::into(formatted_a)) % self.modulus)
+                .into(),
+        )
     }
 
     /// a * b = (a*b)mod p
-    pub fn mult(&self, a: u64, b: u64) -> Result<U256, ModCError> {
-        let formatted_a = U256::from(a);
-        let formatted_b = U256::from(b);
+    pub fn mult(&self, a: T, b: T) -> Result<U256, ModCError> {
+        let formatted_a: U256 = a.into();
+        let formatted_b: U256 = b.into();
 
         let product = formatted_a.checked_mul(formatted_b);
         match product {
@@ -62,23 +85,24 @@ impl Field {
 
     ///uses fermats little theorem:
     /// a^-1=[a^(p-a)]mod p
-    pub fn mult_inv(&self, a: U256) -> Result<U256, ModCError> {
-        if a == U256::from(0) {
+    pub fn mult_inv(&self, a: T) -> Result<U256, ModCError> {
+        let formatted_a: U256 = a.into();
+        if formatted_a == U256::from(0) {
             return Err(ModCError::InverseZero);
-        } else if a > self.modulus {
+        } else if formatted_a > self.modulus.into() {
             let mod_a = self.self_mod(a);
-            let powered = mod_a.pow(self.modulus - mod_a);
+            let powered = mod_a.pow(Into::<U256>::into(self.modulus) - mod_a);
             Ok(powered % self.modulus)
         } else {
-            let powered = a.pow(self.modulus - a);
+            let powered = formatted_a.pow((self.modulus - a).into());
             Ok(powered % self.modulus)
         }
     }
 
     /// div(a,b) = a/b = [a*(b)^-1] mod p
-    pub fn div(&self, a: u64, b: u64) -> Result<U256, ModCError> {
-        let formatted_a = U256::from(a);
-        let formatted_b = U256::from(b);
+    pub fn div(&self, a: T, b: T) -> Result<U256, ModCError> {
+        let formatted_a: U256 = a.into();
+        let formatted_b: U256 = b.into();
 
         let remainder = formatted_a.checked_div(formatted_b);
         match remainder {
@@ -88,14 +112,14 @@ impl Field {
     }
 
     /// self_mod(a) = a mod p
-    pub fn self_mod(&self, a: U256) -> U256 {
-        a % self.modulus
+    pub fn self_mod(&self, a: T) -> U256 {
+        a.into() % self.modulus
     }
 
     ///pow(a,b) = (a^b) mod p
-    pub fn pow(&self, a: u64, power: u64) -> Result<U256, ModCError> {
-        let formatted_a = U256::from(a);
-        let formatted_power = U256::from(power);
+    pub fn pow(&self, a: T, power: T) -> Result<U256, ModCError> {
+        let formatted_a: U256 = a.into();
+        let formatted_power: U256 = power.into();
 
         match formatted_a.checked_pow(formatted_power) {
             Some(r) => return Ok(r % self.modulus),
@@ -103,3 +127,7 @@ impl Field {
         }
     }
 }
+
+// impl Field {
+
+// }
