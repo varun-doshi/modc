@@ -4,15 +4,22 @@
 
 ModC is an ongoing Finite Field Implementation in Rust. 
 
-Current Finite Field Operations
-- Addition
-- Subtration
-- Multiplication
-- Division
-- Additive Inversion
-- Multiplicative Inversion
-- Self Moduli
-- Power
+Current Finite Field Functions:
+✅ ZERO </br>
+✅ ONE </br>
+✅ Addition </br>
+✅ Subtration </br>
+✅ Multiplication </br>
+✅ Division </br>
+✅ Additive Inversion </br>
+✅ Multiplicative Inversion </br>
+✅ Self Moduli </br>
+✅ Power </br>
+⬜ Euclidian </br>
+⬜ Extended Euclidian </br>
+⬜ Extended Euclidian </br>
+⬜ Random Element </br>
+⬜ Generator Element </br>
+⬜ Order of an Element </br>
 
-
-Check the `tests` folder to understand how to usage
+Check the `tests` folder to understand how to use

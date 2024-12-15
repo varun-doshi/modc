@@ -5,12 +5,11 @@ use crate::utils::error::ModCError;
 use primitive_types::U256;
 
 #[derive(Debug, PartialEq)]
-pub struct Field{
+pub struct Field {
     modulus: U256,
 }
 
-impl Field
-{
+impl Field {
     pub fn new(modulus: U256) -> Result<Self, ModCError> {
         if modulus == U256::zero() {
             return Err(ModCError::ModulusZero);
@@ -21,8 +20,18 @@ impl Field
         })
     }
 
+    ///one element of field
+    pub fn ZERO() -> U256 {
+        return U256::from(0);
+    }
+
+    ///zero element of field
+    pub fn ONE() -> U256 {
+        return U256::from(1);
+    }
+
     ///(a+b)=(a+b)mod p
-    pub fn add<T: Copy+Into<U256>>(&self, a: T, b: T) -> Result<U256, ModCError> {
+    pub fn add<T: Copy + Into<U256>>(&self, a: T, b: T) -> Result<U256, ModCError> {
         let formatted_a: U256 = a.into();
         let formatted_b: U256 = b.into();
 
@@ -34,7 +43,7 @@ impl Field
     }
 
     ///(a % m + m - b % m ) % m
-    pub fn sub<T: Copy+Into<U256>>(&self, a: T, b: T) -> Result<U256, ModCError> {
+    pub fn sub<T: Copy + Into<U256>>(&self, a: T, b: T) -> Result<U256, ModCError> {
         //(6-9)mod7=-3mod7
         let formatted_a = self.self_mod(a);
         let formatted_b = self.self_mod(b);
@@ -48,7 +57,7 @@ impl Field
         }
     }
 
-    pub fn add_inv<T: Copy+Into<U256>>(&self, a: T) -> Result<U256, ModCError> {
+    pub fn add_inv<T: Copy + Into<U256>>(&self, a: T) -> Result<U256, ModCError> {
         let formatted_a: U256 = a.into();
         if formatted_a >= self.modulus.into() {
             return Ok(((formatted_a - self.modulus) % self.modulus).into());
@@ -60,7 +69,7 @@ impl Field
     }
 
     /// a * b = (a*b)mod p
-    pub fn mult<T: Copy+Into<U256>>(&self, a: T, b: T) -> Result<U256, ModCError> {
+    pub fn mult<T: Copy + Into<U256>>(&self, a: T, b: T) -> Result<U256, ModCError> {
         let formatted_a: U256 = a.into();
         let formatted_b: U256 = b.into();
 
@@ -73,7 +82,7 @@ impl Field
 
     ///uses fermats little theorem:
     /// a^-1=[a^(p-a)]mod p
-    pub fn mult_inv<T: Copy+Copy+Into<U256>>(&self, a: T) -> Result<U256, ModCError> {
+    pub fn mult_inv<T: Copy + Copy + Into<U256>>(&self, a: T) -> Result<U256, ModCError> {
         let formatted_a: U256 = a.into();
         if formatted_a == U256::from(0) {
             return Err(ModCError::InverseZero);
@@ -88,7 +97,7 @@ impl Field
     }
 
     /// div(a,b) = a/b = [a*(b)^-1] mod p
-    pub fn div<T: Copy+Into<U256>>(&self, a: T, b: T) -> Result<U256, ModCError> {
+    pub fn div<T: Copy + Into<U256>>(&self, a: T, b: T) -> Result<U256, ModCError> {
         let formatted_a: U256 = a.into();
         let formatted_b: U256 = b.into();
 
@@ -100,12 +109,12 @@ impl Field
     }
 
     /// self_mod(a) = a mod p
-    pub fn self_mod<T: Copy+Into<U256>>(&self, a: T) -> U256 {
+    pub fn self_mod<T: Copy + Into<U256>>(&self, a: T) -> U256 {
         a.into() % self.modulus
     }
 
     ///pow(a,b) = (a^b) mod p
-    pub fn pow<T: Copy+Into<U256>>(&self, a: T, power: T) -> Result<U256, ModCError> {
+    pub fn pow<T: Copy + Into<U256>>(&self, a: T, power: T) -> Result<U256, ModCError> {
         let formatted_a: U256 = a.into();
         let formatted_power: U256 = power.into();
 
@@ -115,7 +124,3 @@ impl Field
         }
     }
 }
-
-// impl Field {
-
-// }
