@@ -18,6 +18,14 @@ fn test_modc_addition() {
     let addition = F.add(U256::from(3), U256::from(6)).unwrap();
     assert_eq!(addition, U256::from(2));
 }
+#[test]
+#[allow(non_snake_case)]
+fn test_modc_addition_multi() {
+    let modu = U256::from(7u64);
+    let F = Field::new(modu).unwrap();
+    let addition = F.add_multi(&[3, 7, 8, 9]).unwrap();
+    assert_eq!(addition, U256::from(6));
+}
 
 #[test]
 #[allow(non_snake_case)]
@@ -32,6 +40,13 @@ fn test_modc_subtraction_1() {
 fn test_modc_subtraction_2() {
     let F = Field::new(U256::from(7)).unwrap();
     let difference = F.sub(6, 9);
+    assert_eq!(difference.unwrap(), U256::from(4));
+}
+#[test]
+#[allow(non_snake_case)]
+fn test_modc_subtraction_multi() {
+    let F = Field::new(U256::from(7)).unwrap();
+    let difference = F.sub_multi(&[9,6,9]);
     assert_eq!(difference.unwrap(), U256::from(4));
 }
 #[test]
