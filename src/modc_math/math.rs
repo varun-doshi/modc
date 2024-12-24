@@ -4,7 +4,7 @@ use std::ops::{Add, Div, Mul, Rem, Sub};
 use crate::utils::error::ModCError;
 use primitive_types::U256;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq,Clone)]
 pub struct Field {
     modulus: U256,
 }
