@@ -4,7 +4,7 @@
 
 ModC is an ongoing Finite Field Implementation in Rust. 
 
-Current Finite Field Functions:
+Current Finite Field Functions: </br>
 ✅ ZERO </br>
 ✅ ONE </br>
 ✅ Addition </br>
@@ -22,4 +22,5 @@ Current Finite Field Functions:
 ⬜ Generator Element </br>
 ⬜ Order of an Element </br>
 
-Check the `tests` folder to understand how to use
+Check the `tests` folder to understand how to use. </br>
+Check `mersenne_test.rs` file to see implementation of Mersenne Prime Field using modc.

@@ -123,4 +123,27 @@ impl Field {
             None => return Err(ModCError::Overflow),
         }
     }
+
+    pub fn add_multi<T: Copy + Into<U256>>(&self, values: &[T]) -> Result<U256, ModCError> {
+        let mut result = U256::zero();
+        for value in values {
+            let operand: U256 = (*value).into();
+            result = result
+                .checked_add(operand)
+                .ok_or(ModCError::Overflow)?;
+        }
+        return Ok(result % self.modulus);
+    }
+    pub fn sub_multi<T: Copy + Into<U256>>(&self, values: &[T]) -> Result<U256, ModCError> {
+        let mut result =U256::from(0);
+        for value in values {
+            let operand: U256 = self.self_mod((*value).into());
+            if operand > result {
+                result = (result + self.modulus - operand) % self.modulus;
+            } else {
+                result = (result - operand) % self.modulus;
+            }
+        }
+        return Ok(result % self.modulus);
+    }
 }

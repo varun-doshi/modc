@@ -13,7 +13,7 @@ use primitive_types::U256;
 fn test_mersenne_addition() {
     let mersenne_mod = get_mersenne_mod(7_u16);
     let F = Field::new(mersenne_mod).unwrap();
-    let addition = F.add(U256::from(91), U256::from(108)).unwrap();
+    let addition = F.add(91, 108).unwrap();
     assert_eq!(addition, U256::from(72));
 }
 
