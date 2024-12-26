@@ -3,6 +3,7 @@ use std::ops::{Add, Div, Mul, Rem, Sub};
 
 use crate::utils::error::ModCError;
 use primitive_types::U256;
+use rand::Rng;
 
 #[derive(Debug, PartialEq,Clone)]
 pub struct Field {
@@ -28,6 +29,10 @@ impl Field {
     ///zero element of field
     pub fn ONE() -> U256 {
         return U256::from(1);
+    }
+
+    pub fn modulus(&self)->U256{
+        return self.modulus;
     }
 
     ///(a+b)=(a+b)mod p
@@ -122,6 +127,13 @@ impl Field {
             Some(r) => return Ok(r % self.modulus),
             None => return Err(ModCError::Overflow),
         }
+    }
+
+    ///generate random field element
+    pub fn random(&self)->U256{
+        let mut rng = rand::thread_rng();
+        let fe=self.self_mod(rng.gen::<u64>());
+        fe
     }
 
     pub fn add_multi<T: Copy + Into<U256>>(&self, values: &[T]) -> Result<U256, ModCError> {

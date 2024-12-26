@@ -15,6 +15,7 @@ Current Finite Field Functions: </br>
 ✅ Multiplicative Inversion </br>
 ✅ Self Moduli </br>
 ✅ Power </br>
+✅ Random Element </br>
 ⬜ Euclidian </br>
 ⬜ Extended Euclidian </br>
 ⬜ Extended Euclidian </br>

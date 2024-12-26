@@ -46,7 +46,7 @@ fn test_modc_subtraction_2() {
 #[allow(non_snake_case)]
 fn test_modc_subtraction_multi() {
     let F = Field::new(U256::from(7)).unwrap();
-    let difference = F.sub_multi(&[9,6,9]);
+    let difference = F.sub_multi(&[9, 6, 9]);
     assert_eq!(difference.unwrap(), U256::from(4));
 }
 #[test]
@@ -76,4 +76,13 @@ fn test_modc_pow() {
     let F = Field::new(U256::from(7)).unwrap();
     let remainder = F.pow(8, 2);
     assert_eq!(remainder.unwrap(), U256::from(1));
+}
+#[test]
+#[allow(non_snake_case)]
+fn test_modc_rng() {
+    let F = Field::new(U256::from(13)).unwrap();
+    let element = F.random();
+    println!("{:?}", element);
+    assert!(element > U256::from(0));
+    assert!(element < F.modulus());
 }
